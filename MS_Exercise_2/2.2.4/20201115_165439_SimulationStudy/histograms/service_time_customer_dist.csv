@@ -1,0 +1,13 @@
+#histogram type: discrete-time histogram
+#service_time_customer
+#(lowerBound+upperBound)/2 ; probability
+1000,0;0,0
+3000,0;0,0
+5000,0;0,0
+7000,0;0,0
+9000,0;0,0
+11000,0;1,0
+13000,0;0,0
+15000,0;0,0
+17000,0;0,0
+19000,0;0,0

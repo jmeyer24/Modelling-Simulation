@@ -1,0 +1,13 @@
+#histogram type: continuous-time histogram
+#queue_occupancy_time
+#(lowerBound+upperBound)/2 ; probability
+-55,55;0,0
+-166,64999999999998;0,0
+-277,75;0,0
+-388,84999999999997;0,0
+-499,95;0,0
+-611,05;0,0
+-722,15;0,0
+-833,25;0,0
+-944,3499999999999;0,0
+-1055,45;1,0

@@ -1,0 +1,13 @@
+#histogram type: continuous-time histogram
+#queue_occupancy_time
+#lowerBound ; upperBound ; probability density
+0,0;0,0;NaN
+0,0;0,0;NaN
+0,0;0,0;NaN
+0,0;0,0;NaN
+0,0;0,0;NaN
+0,0;0,0;NaN
+0,0;0,0;NaN
+0,0;0,0;NaN
+0,0;0,0;NaN
+0,0;0,0;Infinity

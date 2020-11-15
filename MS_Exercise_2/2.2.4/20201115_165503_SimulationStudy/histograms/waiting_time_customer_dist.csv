@@ -1,0 +1,13 @@
+#histogram type: discrete-time histogram
+#waiting_time_customer
+#(lowerBound+upperBound)/2 ; probability
+10000,0;1,0
+30000,0;0,0
+50000,0;0,0
+70000,0;0,0
+90000,0;0,0
+110000,0;0,0
+130000,0;0,0
+150000,0;0,0
+170000,0;0,0
+190000,0;0,0

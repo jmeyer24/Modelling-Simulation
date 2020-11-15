@@ -1,0 +1,13 @@
+#histogram type: continuous-time histogram
+#server_utilization_time
+#(lowerBound+upperBound)/2 ; probability
+50000,0;NaN
+150000,0;NaN
+250000,0;NaN
+350000,0;NaN
+450000,0;NaN
+550000,0;NaN
+650000,0;NaN
+750000,0;NaN
+850000,0;NaN
+950000,0;NaN
