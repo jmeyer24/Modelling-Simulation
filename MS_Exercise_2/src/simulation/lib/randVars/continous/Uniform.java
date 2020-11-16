@@ -13,44 +13,54 @@ import simulation.lib.rng.RNG;
 public class Uniform extends RandVar {
 	private double a;
 	private double b;
-	
-	//private double mean;
-	//private double cvar;
-	//private double range;
 
-	public Uniform(RNG rng, double a, double b) { //double mean, double cvar, double range) {
+	//script ZV X ~ U(a,b)
+	public Uniform(RNG rng, double a, double b) {
 		super(rng);
 		this.a = a;
 		this.b = b;
-		
-		//this.mean = mean;
-		//this.cvar = cvar;
-		//this.range = range;
 	}
 
 	@Override
 	public double getRV() {
-		return (rng.rnd()-a)/(b-a);
+		//script f(x)
+		return 1/(b-a);
+		//return (rng.rnd()-a)/(b-a);
+		//last one would be verteilungsfunktion, not a random value of the function, wouldn't it?!
 	}
 
 	@Override
 	public double getMean() {
-		return mean;
+		//script E[X]
+		return (a+b)/2;
 	}
 
 	@Override
 	public double getVariance() {
-		return Math.pow(range, 2)/12;
+		//script VAR[X]
+		return Math.pow(b-a, 2)/12;
 	}
 
 	@Override
 	public void setMean(double m) {
-		this.mean = m;
+		//move a and b to the direction of new mean
+		double dev = m - getMean();
+		this.a = this.a + dev;
+		this.b = this.b + dev;
 	}
 
 	@Override
 	public void setStdDeviation(double s) {
-		this.cvar = s/mean;
+		//sqrt of variance stdDev = (b-a)/2sqrt(3)
+		//s * 2*Math.sqrt(3) = b-a;
+		//s*2*Math.sqrt(3) = mean+x - (mean-x) [x abweichung von mean]
+		//s*2*Math.sqrt(3) = 2x
+		//s*Math.sqrt(3) = x
+		//move b and a by x
+		double x = s*Math.sqrt(3);
+		double mean = getMean();
+		this.a = mean - x;
+		this.b = mean + x;
 	}
 
 	@Override
@@ -61,12 +71,13 @@ public class Uniform extends RandVar {
 
 	@Override
 	public String getType() {
-		return null;
+		return "Uniform";
 	}
 
 	@Override
 	public String toString() {
-		return null;
+		return "\ta: " + a + "\n" +
+				"\tb: " + b + "\n";
 	}
 	
 }

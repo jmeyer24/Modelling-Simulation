@@ -22,6 +22,7 @@ public class ErlangK extends RandVar {
 
 	@Override
 	public double getRV() {		
+		//script f(x), range [0,inf)
 		double x = rng.rnd() * Double.MAX_VALUE;
 		int fac = 1;
 		for (int i=1; i<=k-1; i++)
@@ -33,7 +34,7 @@ public class ErlangK extends RandVar {
 
 	@Override
 	public double getMean() {
-		throw new IllegalArgumentException("got no mean");
+		throw new UnsupportedOperationException("the k-Erlang function got no mean");
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class ErlangK extends RandVar {
 
 	@Override
 	public void setMean(double m) {
-		throw new IllegalArgumentException("got no mean");
+		throw new UnsupportedOperationException("the k-Erlang function got no mean");
 	}
 
 	@Override
@@ -54,18 +55,19 @@ public class ErlangK extends RandVar {
 	@Override
 	public void setMeanAndStdDeviation(double m, double s) {
 		setStdDeviation(s);
-		throw new IllegalArgumentException("got no mean");
+		throw new UnsupportedOperationException("the k-Erlang function got no mean");
 	}
 
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
-		return null;
+		return "ErlangK";
 	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return null;
+		return "\tlambda: " + lambda + "\n" +
+				"\tk: " + k + "\n";
 	}		
 }

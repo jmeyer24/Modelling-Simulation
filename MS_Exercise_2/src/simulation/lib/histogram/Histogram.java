@@ -161,8 +161,6 @@ public abstract class Histogram implements IStatisticObject{
 			String dest = outputdir + "/histograms";
 			File file = new File(dest);
 			file.mkdir();
-			System.out.println(dest);
-			System.out.println(dest + "/" + observedVariable + "_hist.csv");
 			FileWriter histWriter = new FileWriter(dest + "/" + observedVariable + "_hist.csv");
 			FileWriter pdfWriter = new FileWriter(dest + "/" + observedVariable + "_pdf.csv");
 			FileWriter distWriter = new FileWriter(dest + "/" + observedVariable + "_dist.csv");

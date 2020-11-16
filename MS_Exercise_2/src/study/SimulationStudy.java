@@ -9,6 +9,8 @@ import simulation.lib.Simulator;
 import simulation.lib.statistic.IStatisticObject;
 import simulation.lib.counter.*;
 import simulation.lib.histogram.*;
+import simulation.lib.randVars.continous.*;
+import simulation.lib.rng.*;
 
 /**
  * Represents a simulation study. Contains diverse counters for statistics and
@@ -22,7 +24,7 @@ public class SimulationStudy {
 	 * They get converted to simulation time units in setSimulationParameters.
 	 */
 	protected long cInterArrivalTime = 10;
-	protected long cServiceTime = 9;
+	protected long cServiceTime = 11;
 	protected long cSimulationTime = 10000;
 	
 	// TODO
@@ -51,8 +53,20 @@ public class SimulationStudy {
 		 * print out report
 		 */
 		sim.report();
+		//TODO
+		/*
+		 * test random variable functions
+		 */
+		StdRNG rng = new StdRNG();
+		Uniform u = new Uniform(rng, 0, 5); //a,b
+		Exponential e = new Exponential(rng, 1); //lambda
+		ErlangK k = new ErlangK(rng, 1, 5); //lambda, k
 		
-		// TODO: call RandVarTest
+		double[] l = {1,2};
+		double[] p = {0.4,0.6};
+		
+		HyperExponential h = new HyperExponential(rng, l, p); //lambdas, probabilities
+		RandVarTest.testRandVars(u, e, k, h);
 	}
 
 	// PARAMETERS
@@ -115,6 +129,13 @@ public class SimulationStudy {
 	public String chQueueOccupancy = "continuousHistogramQueueOccupancy";
 	public String chServerUtilization = "continuousHistogramServerUtilization";
 	
+	
+	//TODO 2.3.3
+	public String dcUniform = "discreteCounterUniform";
+	public String dcExponential = "discreteCounterExponential";
+	public String dcErlangK = "discreteCounterErlangK";
+	public String dcHyperExponential = "discreteCounterHyperExponential";
+	
 	private Simulator simulator;
 
 	/**
@@ -154,17 +175,20 @@ public class SimulationStudy {
          */
 		statisticObjects.put(dcWaitingTime, new DiscreteCounter("waiting_time_customer"));
 		statisticObjects.put(dcServiceTime, new DiscreteCounter("service_time_customer"));
-		
-		statisticObjects.put(ccQueueOccupancy, new DiscreteCounter("queue_occupancy_time"));
-		statisticObjects.put(ccServerUtilization, new DiscreteCounter("server_utilization_time"));
-
-		//statisticObjects.put(ccQueueOccupancy, new ContinuousCounter("queue_occupancy_time",simulator));
-		//statisticObjects.put(ccServerUtilization, new ContinuousCounter("server_utilization_time",simulator));
+		//statisticObjects.put(ccQueueOccupancy, new DiscreteCounter("queue_occupancy_time"));
+		//statisticObjects.put(ccServerUtilization, new DiscreteCounter("server_utilization_time"));
+		statisticObjects.put(ccQueueOccupancy, new ContinuousCounter("queue_occupancy_time",simulator));
+		statisticObjects.put(ccServerUtilization, new ContinuousCounter("server_utilization_time",simulator));
 
 		statisticObjects.put(dhWaitingTime, new DiscreteHistogram("waiting_time_customer",numIntervals,tLowerBound,tUpperBound));
 		statisticObjects.put(dhServiceTime, new DiscreteHistogram("service_time_customer",numIntervals,tLowerBound,tUpperBound));
 		statisticObjects.put(chQueueOccupancy, new ContinuousHistogram("queue_occupancy_time",numIntervals,(int)qoLowerBound,(int)qoUpperBound,simulator));
 		statisticObjects.put(chServerUtilization, new ContinuousHistogram("server_utilization_time",numIntervals,(int)suLowerBound,(int)suUpperBound,simulator));
+		
+		statisticObjects.put(dcUniform, new DiscreteCounter("uniform"));
+		statisticObjects.put(dcExponential, new DiscreteCounter("exponential"));
+		statisticObjects.put(dcErlangK, new DiscreteCounter("erlangk"));
+		statisticObjects.put(dcHyperExponential, new DiscreteCounter("hyperexponential"));
 	}
 
 

@@ -23,12 +23,15 @@ public class Exponential extends RandVar {
 
 	@Override
 	public double getRV() {
-		return lambda * Math.exp(-lambda * rng.rnd() * Double.MAX_VALUE);
+		//script f(x)
+		//* Double.Max_Value as the interval for the function is [0,inf)
+		double x = rng.rnd() * Double.MAX_VALUE;
+		return lambda * Math.exp(-lambda * x);
 	}
 
 	@Override
 	public double getMean() {
-		throw new IllegalArgumentException("got no mean");
+		throw new UnsupportedOperationException("the exponential function got no mean");
 	}
 
 	@Override
@@ -38,7 +41,7 @@ public class Exponential extends RandVar {
 
 	@Override
 	public void setMean(double m) {
-		throw new IllegalArgumentException("got no mean");
+		throw new UnsupportedOperationException("the exponential function got no mean");
 	}
 
 	@Override
@@ -49,19 +52,19 @@ public class Exponential extends RandVar {
 	@Override
 	public void setMeanAndStdDeviation(double m, double s) {
 		setStdDeviation(s);
-		throw new IllegalArgumentException("got no mean");
+		throw new UnsupportedOperationException("the exponential function got no mean");
 	}
 
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
-		return null;
+		return "Exponential";
 	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return null;
+		return "\tlambda: " + lambda + "\n";
 	}
 	
 }
