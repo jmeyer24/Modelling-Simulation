@@ -14,7 +14,6 @@ public class Uniform extends RandVar {
 	private double a;
 	private double b;
 
-	//script ZV X ~ U(a,b)
 	public Uniform(RNG rng, double a, double b) {
 		super(rng);
 		this.a = a;
@@ -23,21 +22,17 @@ public class Uniform extends RandVar {
 
 	@Override
 	public double getRV() {
-		//script f(x)
-		return 1/(b-a);
-		//return (rng.rnd()-a)/(b-a);
-		//last one would be verteilungsfunktion, not a random value of the function, wouldn't it?!
+		double u = super.rng.rnd();
+		return a + u*(b-a);
 	}
 
 	@Override
 	public double getMean() {
-		//script E[X]
 		return (a+b)/2;
 	}
 
 	@Override
 	public double getVariance() {
-		//script VAR[X]
 		return Math.pow(b-a, 2)/12;
 	}
 
@@ -71,12 +66,13 @@ public class Uniform extends RandVar {
 
 	@Override
 	public String getType() {
-		return "Uniform";
+		return this.getClass().getSimpleName();
 	}
 
 	@Override
 	public String toString() {
-		return "\ta: " + a + "\n" +
+		return super.toString() +
+				"\ta: " + a + "\n" +
 				"\tb: " + b + "\n";
 	}
 	

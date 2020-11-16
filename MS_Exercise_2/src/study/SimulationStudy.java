@@ -57,16 +57,6 @@ public class SimulationStudy {
 		/*
 		 * test random variable functions
 		 */
-		StdRNG rng = new StdRNG();
-		Uniform u = new Uniform(rng, 0, 5); //a,b
-		Exponential e = new Exponential(rng, 1); //lambda
-		ErlangK k = new ErlangK(rng, 1, 5); //lambda, k
-		
-		double[] l = {1,2};
-		double[] p = {0.4,0.6};
-		
-		HyperExponential h = new HyperExponential(rng, l, p); //lambdas, probabilities
-		RandVarTest.testRandVars(u, e, k, h);
 	}
 
 	// PARAMETERS
@@ -129,7 +119,6 @@ public class SimulationStudy {
 	public String chQueueOccupancy = "continuousHistogramQueueOccupancy";
 	public String chServerUtilization = "continuousHistogramServerUtilization";
 	
-	
 	//TODO 2.3.3
 	public String dcUniform = "discreteCounterUniform";
 	public String dcExponential = "discreteCounterExponential";
@@ -184,11 +173,6 @@ public class SimulationStudy {
 		statisticObjects.put(dhServiceTime, new DiscreteHistogram("service_time_customer",numIntervals,tLowerBound,tUpperBound));
 		statisticObjects.put(chQueueOccupancy, new ContinuousHistogram("queue_occupancy_time",numIntervals,(int)qoLowerBound,(int)qoUpperBound,simulator));
 		statisticObjects.put(chServerUtilization, new ContinuousHistogram("server_utilization_time",numIntervals,(int)suLowerBound,(int)suUpperBound,simulator));
-		
-		statisticObjects.put(dcUniform, new DiscreteCounter("uniform"));
-		statisticObjects.put(dcExponential, new DiscreteCounter("exponential"));
-		statisticObjects.put(dcErlangK, new DiscreteCounter("erlangk"));
-		statisticObjects.put(dcHyperExponential, new DiscreteCounter("hyperexponential"));
 	}
 
 

@@ -16,29 +16,38 @@ public class HyperExponential extends RandVar {
 	
 	public HyperExponential(RNG rng, double[] lambdas, double[] probabilities) {
 		super(rng);
-		//both got length k, one of them is picked for the exponential function representative (see script)
+		//both got length k, here k = 2, one of them is picked for the exponential function representative (see script)
 		this.lambdas = lambdas;
 		this.probabilities = probabilities;
 	}
 
 	@Override
 	public double getRV() {
-		double x = rng.rnd() * Double.MAX_VALUE;
-		double result = 0;
-		for(int i=0;i<probabilities.length;i++) {
-			result += probabilities[i] * lambdas[i] * Math.exp(-lambdas[i] * x);
+		double u_1 = rng.rnd();
+		double u_2 = rng.rnd();
+		
+		double sum = 0;
+		int j = -1;
+		while (sum < u_1) {
+			j++;
+			sum += probabilities[j];
 		}
-		return result;
+		
+		return -Math.log(u_2)/lambdas[j];
 	}
 
 	@Override
 	public double getMean() {
-		throw new UnsupportedOperationException("the HyperExponential function got no mean");
+		double mean = 0; 
+		for (int i = 0; i < probabilities.length; i++) {
+			mean += probabilities[i]/lambdas[i];
+		}
+		return mean;
 	}
 
 	@Override
 	public double getVariance() {
-		//formula wikipedia, script 1.3.4 Var
+		//https://de.wikipedia.org/wiki/Hyperexponentialverteilung unter Eigenschaften
 		double E1 = 0;
 		double E2 = 0;
 		for(int i=0;i<probabilities.length;i++) {
@@ -53,39 +62,63 @@ public class HyperExponential extends RandVar {
 
 	@Override
 	public void setMean(double m) {
-		throw new UnsupportedOperationException("the HyperExponential function got no mean");
+		/*
+		 * Gleichungssystem lösen?!
+		 * wähle:
+		 * lamdas[0] = 1/E * (1 + sqrt(cvar^2 - 1/cvar^2 + 1))
+		 * lamdas[1] = 1/E * (1 - sqrt(cvar^2 - 1/cvar^2 + 1))
+		 * 
+		 * probabilities[0] / lamdas[0] = probabilities[1] / lambdas[1]
+		 * 
+		 * 1 = prob[0] + prob[1] <=> prob[1] = 1 - prob[0]
+		 * 
+		 * Lösung:
+		 * prob[0] = (1-prob[0]) * lambdas[0] /lambdas[1]
+		 * prob[0]  = lambdas[0]/lambdas[1] - lambdas[0]*prob[0] / lambdas[1]
+		 * prob[0] + l[0]*prob[0]/l[1] = l[0]/l[1]
+		 * prob[0]  = (l[0]/l[1]) / [1 + l[0]/l[1]]
+		 * prob[0] = (l[0]/l[1]) / a
+		 * prob[0] = l[0]/l[1] * 1/a
+		 * prob[0] = l[0]/ (l[1]*a)
+		 * prob[0] = l[0]/ (l[1]*[1 + l[0]/l[1]])
+		 * prob[0] = l[0] / (l[1]+l[0])
+		 * 
+		 * prob[1] = 1-prob[0]
+		 */
+		double cvar = super.getCvar(); 
+		lambdas[0] = 1/m * (1 + Math.sqrt((Math.pow(cvar,2) - 1)/(Math.pow(cvar,2) + 1)));
+		lambdas[1] = 1/m * (1 - Math.sqrt((Math.pow(cvar,2) - 1)/(Math.pow(cvar,2) + 1)));
+		probabilities[0] = lambdas[0] / (lambdas[1]+lambdas[0]);
+		probabilities[1] = 1 - probabilities[0];
 	}
 
 	@Override
 	public void setStdDeviation(double s) {
-		//TODO
-		//endless loop this would be :P
-		//setVariance(Math.pow(s, 2));
-		/*
-		 * std = sqrt(E2 - E1^2) <=> std = sqrt(2*p1/l1^2+2*p2/l2^2 - (p1/l1 + p2/l2)^2) 
-		 * <=> std = sqrt(2*p1/l1^2 + 2*p2/l2^2 - [(p1/l1)^2 + 2*p1*p2/(l1*l2) + (p2/l2)^2])
-		 * <=> std = sqrt((2*p1-p1^2)/l1^2 + (2*p2-p2^2)/l2^2 + 2*p1*p2/(l1*l2)) 
-		*/
-		throw new UnsupportedOperationException("this is too hard to calculate...");
-		
+		double m = getMean();
+		double cvar = s/m; 
+		lambdas[0] = 1/m * (1 + Math.sqrt((Math.pow(cvar,2) - 1)/(Math.pow(cvar,2) + 1)));
+		lambdas[1] = 1/m * (1 - Math.sqrt((Math.pow(cvar,2) - 1)/(Math.pow(cvar,2) + 1)));
+		probabilities[0] = lambdas[0] / (lambdas[1]+lambdas[0]);
+		probabilities[1] = 1 - probabilities[0];
 	}
 
 	@Override
 	public void setMeanAndStdDeviation(double m, double s) {
-		setStdDeviation(s);
-		throw new UnsupportedOperationException("the HyperExponential function got no mean");
+		//both calculations depend on the cvar, which change after the first calculation independent of the order
+		throw new UnsupportedOperationException("only can set either one, not both");
 	}
 
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
-		return "HyperExponential";
+		return this.getClass().getSimpleName();
 	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "\tlambdas: " + lambdas.toString() + "\n" +
+		return super.toString() + 
+				"\tlambdas: " + lambdas.toString() + "\n" +
 				"\tprobabilities: " + probabilities.toString() + "\n";
 	}
 }

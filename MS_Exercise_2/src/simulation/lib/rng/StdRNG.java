@@ -31,6 +31,9 @@ public class StdRNG extends RNG {
 		if(rng != null) {
 			rng.setSeed(seed);			
 		}
+		else {
+	    	rng = new Random(seed);
+		}
 	}
 
 	/**

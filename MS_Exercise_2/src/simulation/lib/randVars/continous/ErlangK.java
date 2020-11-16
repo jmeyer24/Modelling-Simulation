@@ -22,19 +22,18 @@ public class ErlangK extends RandVar {
 
 	@Override
 	public double getRV() {		
-		//script f(x), range [0,inf)
-		double x = rng.rnd() * Double.MAX_VALUE;
-		int fac = 1;
-		for (int i=1; i<=k-1; i++)
-        {
-			fac *= i;
-        }
-		return (Math.pow(lambda*x, k-1)/fac) * lambda * Math.exp(-lambda * x);
+		double product = 1;
+		double u = 0;
+		for (int i = 0; i < k; i++) {
+			u = super.rng.rnd();
+			product *= u;
+		}
+		return -1/lambda * Math.log(product);
 	}
 
 	@Override
 	public double getMean() {
-		throw new UnsupportedOperationException("the k-Erlang function got no mean");
+		return k/lambda;
 	}
 
 	@Override
@@ -44,30 +43,37 @@ public class ErlangK extends RandVar {
 
 	@Override
 	public void setMean(double m) {
-		throw new UnsupportedOperationException("the k-Erlang function got no mean");
+		if (m <= 0)
+			throw new IllegalArgumentException("Mean must be greater than zero.");
+		else {
+			lambda = k/m;
+		}
 	}
 
 	@Override
 	public void setStdDeviation(double s) {
+		//1/Math.sqrt(k) = s / getMean();
+		k = (int)Math.pow(getMean()/s,2);
 		lambda = Math.sqrt(k)/s;
 	}
 
 	@Override
 	public void setMeanAndStdDeviation(double m, double s) {
+		setMean(m);
 		setStdDeviation(s);
-		throw new UnsupportedOperationException("the k-Erlang function got no mean");
 	}
 
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
-		return "ErlangK";
+		return this.getClass().getSimpleName();
 	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "\tlambda: " + lambda + "\n" +
+		return super.toString() + 
+				"\tlambda: " + lambda + "\n" +
 				"\tk: " + k + "\n";
 	}		
 }
