@@ -16,7 +16,7 @@ public class DiscreteAutocorrelationCounter extends DiscreteCounter {
 
 	private int maxLag;				
 	// Es wird angenommen, dass maxLang für eine laufende Reihe ned geändert werden kann
-	private int countFirst;
+	private int countFirst = 0;
 	
 	private double[] firstValues; 
 	private double[] lastValues; 
@@ -62,28 +62,44 @@ public class DiscreteAutocorrelationCounter extends DiscreteCounter {
 			firstValues[countFirst] = x;
 			countFirst++;
 		}
-
+		
+//		System.out.println("fV ####################################");
+//		for(double s : firstValues) {
+//			System.out.println(s);
+//		}
+		
 		// Update lagSqrSums
 		lagSqrSums[0] = lagSqrSums[0] + x*x;
 		for(int i = 1; i <= maxLag; i++) {
 			lagSqrSums[i] = lagSqrSums[i] + x * lastValues[i-1];
 		}
+//		System.out.println("lSS ####################################");
+//		for(double s : lagSqrSums) {
+//			System.out.println(s);
+//		}
 		
 		// Update lastValues
-		for(int i = 1; i < maxLag; i++) {
+		for(int i = maxLag-1; i > 0; i--) {
 			lastValues[i] = lastValues[i-1];
 		}
 		lastValues[0] = x;
+		
+//		System.out.println("lV ####################################");
+//		for(double s : lastValues) {
+//			System.out.println(s);
+//		}
 		
 	}
 	
 	/**
 	 * 
-	 * @param lag
+	 * @param lag 
 	 * @return
 	 */
 	public double getAutoCovariance(int lag) {
 		if(lag <= maxLag) {
+			System.out.println("lag: " + lag);
+
 			long n = super.getNumSamples();
 			double mean = super.getMean();
 			
@@ -91,19 +107,28 @@ public class DiscreteAutocorrelationCounter extends DiscreteCounter {
 			for(int i = 0; i < lag; i++) {
 				sumToJ += firstValues[i];
 			}
+			System.out.println("fV ####################################");
+			for(double s : firstValues) {
+				System.out.println(s);
+			}
+			System.out.println(sumToJ);
 			
 			double sumFromN_J = 0; 
 			for(int i = 0; i < lag; i++) {
 				sumFromN_J += lastValues[i];
 			}
+			System.out.println("lV ####################################");
+			for(double s : lastValues) {
+				System.out.println(s);
+			}
+			System.out.println(sumFromN_J);
 			
-			return (1/(n-lag)) * 
-					(lagSqrSums[lag] - mean * 
-							(2 * super.getSumPowerOne() - sumToJ - sumFromN_J))
-					+ Math.pow(mean, 2);
+			System.out.println(lagSqrSums[lag]);
+
+			return (1/(n-lag)) * (lagSqrSums[lag] - mean * (2 * super.getSumPowerOne() - sumToJ - sumFromN_J)) + Math.pow(mean, 2);
 		}
 		else {
-			return 0;
+			return Double.POSITIVE_INFINITY;
 //			throw new Exception("The given lag value is greater than the maximum allowed lag.");
 		}
 	}
@@ -114,13 +139,7 @@ public class DiscreteAutocorrelationCounter extends DiscreteCounter {
 	 * @return
 	 */
 	public double getAutoCorrelation(int lag) {
-		if(lag <= maxLag) {
-			return getAutoCovariance(lag) / super.getVariance();
-		}
-		else {
-			return 0;
-//			throw new Exception("The given lag value is greater than the maximum allowed lag.");
-		}
+		return getAutoCovariance(lag) / super.getVariance();
 	}
 	
 	/**
