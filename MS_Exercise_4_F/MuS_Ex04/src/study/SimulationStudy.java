@@ -28,7 +28,8 @@ public class SimulationStudy {
      * They get converted to simulation time units in setSimulationParameters.
      */
 //	protected long cSimulationTime = 10;		// 10^1 customers
-	protected long cSimulationTime = 100000;	// 10^5 customers
+//	protected long cSimulationTime = 100000;	// 10^5 customers
+	protected long cSimulationTime = 10000000;	// 10^7 customers
 
 	/**
 	 * Main method
@@ -124,16 +125,6 @@ public class SimulationStudy {
 	private void setSimulationParameters() {
 		simulationTime = simulator.realTimeToSimTime(cSimulationTime);
 		
-		StdRNG rngIA = new StdRNG(100);
-		randVarInterArrivalTime = new Exponential(rngIA, simulator.realTimeToSimTime(1)); 
-//		randVarInterArrivalTime = new Exponential(rngIA, 1); 
-		
-		StdRNG rngS = new StdRNG(256);
-//		randVarServiceTime = new Exponential(rngS, simulator.realTimeToSimTime(0.8));  
-		randVarServiceTime = new Exponential(rngS, simulator.realTimeToSimTime(0.95)); 
-//		randVarServiceTime = new Exponential(rngS, 0.8); 
-		// Mean 0.8 für Service Time, damit mean utalization 80%
-		
 		/*
 		 * TODO Problem 4.2.1/2/5 - Create randVar instances
 		 * Create instances for this.randVarInterArrivalTime and this.randVarServiceTime
@@ -141,6 +132,15 @@ public class SimulationStudy {
 		 * These random variables are later used in the Simulator class to create random interarrival and service times
 		 * Notice that the mean values need to be modified for 4.2.2 and 4.2.5!
 		 */
+		StdRNG rngIA = new StdRNG(System.currentTimeMillis() * 2);
+		randVarInterArrivalTime = new Exponential(rngIA, 1); 
+		
+		StdRNG rngS = new StdRNG(System.currentTimeMillis());
+		randVarServiceTime = new Exponential(rngS, 0.65);  
+//		randVarServiceTime = new Exponential(rngS, 0.8); 
+//		randVarServiceTime = new Exponential(rngS, 0.95); 
+		// Mean 0.8 für Service Time, damit mean utalization 80%
+		
 	}
 
 	/**
