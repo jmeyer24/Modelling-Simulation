@@ -27,7 +27,7 @@ public class SimulationStudy {
      * Note: Units are real time units (seconds).
      * They get converted to simulation time units in setSimulationParameters.
      */
-	protected long cSimulationTime = 1000;
+	protected long cSimulationTime = 100000;
 
 	/**
 	 * Main method
@@ -45,9 +45,6 @@ public class SimulationStudy {
 		 * print out report
 		 */
 		sim.report();
-
-		// call of autocorrelation test
-		//AutocorrelationTest.testAutocorrelation();
 	}
 
 	// PARAMETERS
@@ -133,12 +130,13 @@ public class SimulationStudy {
 		 * Notice that the mean values need to be modified for 4.2.2 and 4.2.5!
 		 */
 		randVarInterArrivalTime = new Exponential(new StdRNG(System.currentTimeMillis()),1);
-		// mean inter arrival = 1s, utilization shall be .8 => mean service time has to be .64 = .8^2, why?!
+		System.out.println(simulator);
+		// mean inter arrival = 1s, utilization shall be .8 => mean service time has to be .64 = .8^2, why?! nonono wrong somewhere
 		// with this the service time/customer counter mean is 1.26?!
-		// randVarServiceTime = new Exponential(new StdRNG(System.currentTimeMillis()*2),0.64);
+		randVarServiceTime = new Exponential(new StdRNG(System.currentTimeMillis()*2),0.65);
 		
-		// utilization shall be .95 => mean sevice time has to be .95^2 = .9025
-		randVarServiceTime = new Exponential(new StdRNG(System.currentTimeMillis()*2),0.9025);
+		// utilization shall be .95 => mean sevice time has to be .95
+		// randVarServiceTime = new Exponential(new StdRNG(System.currentTimeMillis()*2),0.95);
 	}
 
 	/**

@@ -8,7 +8,10 @@ import simulation.lib.counter.DiscreteAutocorrelationCounter;
  */
 
 public class AutocorrelationTest {
-
+	public static void main(String[] args) {
+		testAutocorrelation();
+	}
+	
     public static void testAutocorrelation() {
     	DiscreteAutocorrelationCounter dac = new DiscreteAutocorrelationCounter("time series","counter type: discrete autocorrelation counter",8);
 

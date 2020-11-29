@@ -43,8 +43,9 @@ public class DiscreteAutocorrelationCounter extends DiscreteCounter{
 	}
 	
 	public double getAutoCorrelation(int lag) {
-		int num = (int)getNumSamples();
-		return num > 1 & num > lag ? getAutoCovariance(lag) / (num/(num-1) * (getSumPowerTwo()/num - Math.pow(getMean(), 2))) : 0;
+		//int num = (int)getNumSamples();
+		//return num > 1 & num > lag ? getAutoCovariance(lag) / (num/(num-1) * (getSumPowerTwo()/num - Math.pow(getMean(), 2))) : 0;
+		return getAutoCovariance(lag) / getVariance();
 	}
 
 	/**

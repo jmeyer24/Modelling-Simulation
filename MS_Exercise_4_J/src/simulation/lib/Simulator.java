@@ -249,7 +249,7 @@ public class Simulator implements IEventObserver {
 			 * Use your random variable contained in the SimulationStudy object
 			 * !!! Mind the difference between simulation and real time and do conversions accordingly !!!
 			 */
-            long interarrivalTime = (long)realTimeToSimTime(sims.randVarInterArrivalTime.getLongRV()); //TODO: oder other one around?
+            long interarrivalTime = realTimeToSimTime(sims.randVarInterArrivalTime.getLongRV()); //TODO: oder other one around?
             pushNewEvent(new CustomerArrivalEvent(state, this.getSimTime() + interarrivalTime));
         } else if (c == ServiceCompletionEvent.class) {
             /*
@@ -257,7 +257,7 @@ public class Simulator implements IEventObserver {
 			 * Use your random variable contained in the SimulationStudy object
 			 * !!! Mind the difference between simulation and real time and do conversions accordingly !!!
 			 */
-            long serviceTime = (long)realTimeToSimTime(sims.randVarServiceTime.getLongRV());
+            long serviceTime = realTimeToSimTime(sims.randVarServiceTime.getLongRV());
             pushNewEvent(new ServiceCompletionEvent(state, this.getSimTime() + serviceTime));
         }
     }
