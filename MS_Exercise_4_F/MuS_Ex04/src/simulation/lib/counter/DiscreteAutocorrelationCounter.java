@@ -63,31 +63,17 @@ public class DiscreteAutocorrelationCounter extends DiscreteCounter {
 			countFirst++;
 		}
 		
-//		System.out.println("fV ####################################");
-//		for(double s : firstValues) {
-//			System.out.println(s);
-//		}
-		
 		// Update lagSqrSums
 		lagSqrSums[0] = lagSqrSums[0] + x*x;
 		for(int i = 1; i <= maxLag; i++) {
 			lagSqrSums[i] = lagSqrSums[i] + x * lastValues[i-1];
 		}
-//		System.out.println("lSS ####################################");
-//		for(double s : lagSqrSums) {
-//			System.out.println(s);
-//		}
 		
 		// Update lastValues
 		for(int i = maxLag-1; i > 0; i--) {
 			lastValues[i] = lastValues[i-1];
 		}
 		lastValues[0] = x;
-		
-//		System.out.println("lV ####################################");
-//		for(double s : lastValues) {
-//			System.out.println(s);
-//		}
 		
 	}
 	
@@ -98,7 +84,6 @@ public class DiscreteAutocorrelationCounter extends DiscreteCounter {
 	 */
 	public double getAutoCovariance(int lag) {
 		if(lag <= maxLag) {
-			System.out.println("lag: " + lag);
 
 			long n = super.getNumSamples();
 			double mean = super.getMean();
@@ -107,25 +92,17 @@ public class DiscreteAutocorrelationCounter extends DiscreteCounter {
 			for(int i = 0; i < lag; i++) {
 				sumToJ += firstValues[i];
 			}
-			System.out.println("fV ####################################");
-			for(double s : firstValues) {
-				System.out.println(s);
-			}
-			System.out.println(sumToJ);
 			
 			double sumFromN_J = 0; 
 			for(int i = 0; i < lag; i++) {
 				sumFromN_J += lastValues[i];
 			}
-			System.out.println("lV ####################################");
-			for(double s : lastValues) {
-				System.out.println(s);
-			}
-			System.out.println(sumFromN_J);
 			
-			System.out.println(lagSqrSums[lag]);
-
-			return (1/(n-lag)) * (lagSqrSums[lag] - mean * (2 * super.getSumPowerOne() - sumToJ - sumFromN_J)) + Math.pow(mean, 2);
+			double vorFactor = 1/((double)(n-lag));
+			
+			double cov = vorFactor * (lagSqrSums[lag] - mean * (2 * super.getSumPowerOne() - sumToJ - sumFromN_J)) + Math.pow(mean, 2);
+			
+			return cov;
 		}
 		else {
 			return Double.POSITIVE_INFINITY;
@@ -139,7 +116,11 @@ public class DiscreteAutocorrelationCounter extends DiscreteCounter {
 	 * @return
 	 */
 	public double getAutoCorrelation(int lag) {
-		return getAutoCovariance(lag) / super.getVariance();
+		double var = super.getVariance();
+		if(var != 0)
+			return getAutoCovariance(lag) / var;
+		else 
+			return Double.POSITIVE_INFINITY;
 	}
 	
 	/**
