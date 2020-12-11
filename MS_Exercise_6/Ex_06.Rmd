@@ -1,0 +1,105 @@
+---
+title: "Modellierung und Simulation"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 6.1
+```{r,echo=FALSE}
+library(ggplot2)
+```
+We define a function for drawing the transitionDiagram
+```{r}
+transitionDiagram <- function(df,curv=1,loopSize=0.5,arrowSize=0.025,pointCol='black',transCol='grey',selfCol='grey',selfAngle=90){
+  ##
+  # creates a transition Diagram from a dataframe
+  ##
+  
+  numStates <- dim(unique(df['From']))[1]
+  
+  df1 <- df[df['From']==df['To'],]  # all self-directed (loop) state transition
+  nv1 <- rep(0,dim(df1)[1])
+  ov1 <- rep(loopSize,dim(df1)[1])
+  df2 <- df[df['From']!=df['To'],]  # all non-self transitions
+  nv2 <- rep(0,dim(df2)[1])
+  ov2 <- rep(loopSize,dim(df2)[1])
+  
+  # draw state transitions
+  diagram <- ggplot(data = df2,aes(x=From,y=ov2)) + 
+    geom_point(aes(x=From,y=nv2),size=3,pch=16,colour=pointCol) +
+    geom_text(aes(x=From,y=nv2),label=paste0("        ",df2[,1])) +
+    geom_curve(aes(x=From,y=nv2,xend=To,yend=nv2),curvature = curv, ncp=1000, color=transCol,
+             arrow = arrow(length=unit(arrowSize,"npc"),type = "closed"))  # draw transition to next other status
+    
+  if(loopSize>1){
+    diagram <- diagram + xlim(-loopSize+1,numStates+loopSize-1) + ylim(-loopSize,loopSize)
+  } else {
+    diagram <- diagram + xlim(-1, numStates) + ylim(-1, 1)
+  }
+    
+  # if there are self loops draw them (as 2 seperate arrow for 1 loop)
+  if(sum(df['From']==df['To']) > 0){ 
+    diagram <- diagram + geom_curve(data = df1, aes(x = From, y = nv1, xend = To, yend = ov1),curvature = curv, ncp=1000, color=selfCol, angle=selfAngle) +  # draw transition from same status
+      geom_curve(data = df1, aes(x = From, y = ov1, xend = To, yend = nv1),curvature = curv, ncp=1000, color=selfCol, angle=selfAngle, arrow = arrow(length=unit(arrowSize,"npc"),type = "closed")) # draw transition to same status
+  }
+  
+  blank <- theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),legend.position="none",
+          panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),plot.background=element_blank())
+  
+  diagram + blank
+}
+```
+### 1.
+After that we can get the information from the exercise example and build from it the respective graph. In addition we draw the adjacency matrix/state transition matrix.
+
+TODO: shall we draw the probabilities on top of the arcs?
+```{r}
+adjVector <- c(0.1,0.2,0.3,0.4,0,0,1,0,0,0,0,1,1,0,0,0)
+stateTransitionMatrix <- matrix(adjVector,nrow=4,ncol=4,dimnames=list(c(0,1,2,3),c(0,1,2,3)),byrow=TRUE)
+stateTransitionMatrix
+States <- c(0,1,2,3)
+graph <- data.frame(From=rep(States,each=4),To=rep(States,4),Probability=adjVector)
+exGraph= graph[graph$Probability!=0,]
+
+transitionDiagram(exGraph,.5)
+transitionDiagram(exGraph,1)
+```
+
+### 2.
+### 3.
+### 4.
+### 5.
+### 6.
+### 7.
+### 8.
+### 9.
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Problem 6.2
+### 1.
+### 2.
+### 3.
+### 4.
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
